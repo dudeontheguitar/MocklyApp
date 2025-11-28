@@ -16,13 +16,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExpandedFullScreenSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -39,8 +35,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -48,27 +42,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mocklyapp.R
-import com.example.mocklyapp.models.CommunityItem
 import com.example.mocklyapp.models.MessageItem
-import com.example.mocklyapp.models.OngoingInterviewItem
-import com.example.mocklyapp.ui.theme.Poppins
+import com.example.mocklyapp.presentation.theme.Poppins
 import kotlinx.coroutines.launch
 
 @Composable
 fun MessageScreen() {
 
     val messages = listOf(
-        MessageItem("Sigma Sigmaev", "Hello", "12:56", 2),
-        MessageItem("Barbar Ailykov", "Ajvbdjvbdjhabvhbb...", "12:34", 0),
-        MessageItem("Baglan Nurkassym", "i am gay, i want to...", "11:43", 0),
-        MessageItem("Baglan Nurkassym", "i am gay, i want to...", "11:43", 0),
-        MessageItem("Baglan Nurkassym", "i am gay, i want to...", "11:43", 0),
-        MessageItem("Baglan Nurkassym", "i am gay, i want to...", "11:43", 0),
-        MessageItem("Baglan Nurkassym", "i am gay, i want to...", "11:43", 0),
-        MessageItem("Baglan Nurkassym", "i am gay, i want to...", "11:43", 0),
-        MessageItem("Baglan Nurkassym", "i am gay, i want to...", "11:43", 0),
-        MessageItem("Baglan Nurkassym", "i am gay, i want to...", "11:43", 0),
-        MessageItem("Baglan Nurkassym", "i am gay, i want to...", "11:43", 0),
+        MessageItem("Batyrkhan Malikov", "Excellent. See you tomorrow...", "12:56", 2),
+        MessageItem("Azamat Ashmakyn", "Thank you!", "12:34", 0),
+        MessageItem("Daniyar Kulumshin", "Ok", "11:43", 1),
+        MessageItem("Yerbolat Bedelkhan", "Product management is for...", "11:43", 0),
+        MessageItem("Baglan Nurkassym", "Minecraft is good game", "11:21", 3),
+        MessageItem("Aibar Barlykov", "I also play minecraft everyday", "11:10", 0),
+        MessageItem("Abdulgazimov Nurbek", "Aktobe sila", "10:53", 1),
+        MessageItem("Utessinov Arkat", "Thank you!", "10:48", 0),
+        MessageItem("Aliev Yerassyl", "AAAAA", "10:21", 8),
+        MessageItem("Atullaev Gaziz", "I am middle backend dev...", "9:43", 0),
     )
 
     Surface (color = MaterialTheme.colorScheme.onBackground){

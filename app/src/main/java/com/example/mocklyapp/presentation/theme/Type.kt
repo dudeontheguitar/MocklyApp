@@ -1,4 +1,4 @@
-package com.example.mocklyapp.ui.theme
+package com.example.mocklyapp.presentation.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

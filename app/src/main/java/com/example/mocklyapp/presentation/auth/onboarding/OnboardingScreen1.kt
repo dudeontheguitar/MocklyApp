@@ -1,4 +1,4 @@
-package com.example.mocklyapp
+package com.example.mocklyapp.presentation.auth.onboarding
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,7 +17,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.mocklyapp.ui.theme.Poppins
+import com.example.mocklyapp.R
+import com.example.mocklyapp.presentation.theme.Poppins
 
 @Composable
 fun OnboardingScreen1(

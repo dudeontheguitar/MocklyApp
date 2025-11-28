@@ -1,4 +1,4 @@
-package com.example.mocklyapp
+package com.example.mocklyapp.presentation.navigation
 
 import kotlinx.serialization.Serializable
 

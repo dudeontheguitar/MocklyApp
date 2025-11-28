@@ -40,7 +40,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -48,11 +47,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
-import com.example.mocklyapp.InterviewRegister
+import com.example.mocklyapp.presentation.navigation.InterviewRegister
 import com.example.mocklyapp.R
 import com.example.mocklyapp.models.InterviewItem
 import com.example.mocklyapp.models.OngoingInterviewItem
-import com.example.mocklyapp.ui.theme.Poppins
+import com.example.mocklyapp.presentation.theme.Poppins
 
 @Composable
 fun InterviewScreen(

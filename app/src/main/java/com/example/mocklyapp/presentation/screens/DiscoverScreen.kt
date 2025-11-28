@@ -47,7 +47,7 @@ import androidx.compose.ui.unit.sp
 import com.example.mocklyapp.R
 import com.example.mocklyapp.models.CommunityItem
 import com.example.mocklyapp.models.OngoingInterviewItem
-import com.example.mocklyapp.ui.theme.Poppins
+import com.example.mocklyapp.presentation.theme.Poppins
 import kotlinx.coroutines.launch
 
 @Composable

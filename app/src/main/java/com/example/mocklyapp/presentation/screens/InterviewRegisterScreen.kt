@@ -1,6 +1,5 @@
 package com.example.mocklyapp.presentation.screens
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -23,7 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mocklyapp.R
-import com.example.mocklyapp.ui.theme.Poppins
+import com.example.mocklyapp.presentation.theme.Poppins
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -43,7 +42,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.TextField
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
 
