@@ -17,4 +17,6 @@ interface AuthRepository {
     suspend fun refresh(refreshTokens: String): Tokens
 
     suspend fun logout()
+
+    suspend fun changePassword(currentPassword: String, newPassword: String)
 }

@@ -68,7 +68,7 @@ class AuthLocalDataSource(context: Context) {
             .apply()
     }
 
-    // Методы для онбординга
+
     fun setOnboardingCompleted() {
         prefs.edit().putBoolean(KEY_ONBOARDING_COMPLETED, true).apply()
     }

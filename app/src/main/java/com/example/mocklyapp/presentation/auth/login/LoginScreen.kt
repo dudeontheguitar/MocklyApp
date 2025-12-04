@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +32,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -104,6 +107,8 @@ fun LoginScreen(
                 },
                 placeholder = { Text("Enter your password") },
                 singleLine = true,
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
@@ -189,7 +194,7 @@ fun LoginScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 165.dp, end = 165.dp, top = 8.dp),
+                    .padding(start = 150.dp, end = 150.dp, top = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Image(

@@ -26,3 +26,9 @@ object SettingsRoute
 
 @Serializable
 object InterviewRegister
+
+@Serializable
+object EditProfileRoute
+
+@Serializable
+object ChangePasswordRoute

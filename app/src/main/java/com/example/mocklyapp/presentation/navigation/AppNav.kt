@@ -29,6 +29,8 @@ import com.example.mocklyapp.R
 import com.example.mocklyapp.data.auth.AuthRepositoryImpl
 import com.example.mocklyapp.data.auth.local.AuthLocalDataSource
 import com.example.mocklyapp.data.auth.remote.AuthApi
+import com.example.mocklyapp.data.user.UserRepositoryImpl
+import com.example.mocklyapp.data.user.remote.UserApi
 import com.example.mocklyapp.presentation.auth.login.LoginScreen
 import com.example.mocklyapp.presentation.auth.login.LoginViewModel
 import com.example.mocklyapp.presentation.auth.onboarding.OnboardingScreen1
@@ -37,6 +39,12 @@ import com.example.mocklyapp.presentation.auth.onboarding.OnboardingScreen3
 import com.example.mocklyapp.presentation.auth.register.RegisterScreen
 import com.example.mocklyapp.presentation.auth.register.RegisterViewModel
 import com.example.mocklyapp.presentation.screens.*
+import com.example.mocklyapp.presentation.settings.SettingsScreen
+import com.example.mocklyapp.presentation.settings.SettingsViewModel
+import com.example.mocklyapp.presentation.settings.change_password.ChangePasswordScreen
+import com.example.mocklyapp.presentation.settings.change_password.ChangePasswordViewModel
+import com.example.mocklyapp.presentation.settings.edit_profile.EditProfileScreen
+import com.example.mocklyapp.presentation.settings.edit_profile.EditProfileViewModel
 
 @Composable
 fun AppNav(
@@ -44,12 +52,12 @@ fun AppNav(
 ) {
     val context = LocalContext.current
 
-    // ----- data layer (общая для login и register) -----
+
     val authApi = remember { ApiClient.retrofit.create(AuthApi::class.java) }
     val authLocal = remember { AuthLocalDataSource(context) }
     val authRepo = remember { AuthRepositoryImpl(authApi, authLocal) }
 
-    // Проверяем, пройден ли онбординг и авторизован ли пользователь
+
     val isOnboardingCompleted = remember { authLocal.isOnboardingCompleted() }
     val isLoggedIn = remember { authLocal.getAccessToken() != null }
 
@@ -145,12 +153,24 @@ fun AppNav(
                 }
             )
         }
-        composable<DiscoverRoute> { BottomNav() }
+        composable<DiscoverRoute> {
+            BottomNav(
+                onLogout = {
+                    navController.navigate(Login) {
+                        popUpTo(DiscoverRoute) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+
     }
 }
 
 @Composable
-fun BottomNav(){
+fun BottomNav(
+    onLogout: () -> Unit
+){
     val nav = rememberNavController()
     val tabs = listOf(DiscoverRoute, InterviewRoute, MessageRoute, SettingsRoute)
     val backStackEntry by nav.currentBackStackEntryAsState()
@@ -170,7 +190,107 @@ fun BottomNav(){
             composable<DiscoverRoute> { DiscoverScreen() }
             composable<InterviewRoute> { InterviewScreen(nav) }
             composable<MessageRoute> { MessageScreen() }
-            composable<SettingsRoute> { SettingsScreen() }
+
+
+            composable<SettingsRoute> {
+
+                val context = LocalContext.current
+
+                val authLocal = remember { AuthLocalDataSource(context) }
+
+                val authApi = remember {
+                    ApiClient.retrofit.create(AuthApi::class.java)
+                }
+                val authRepo = remember {
+                    AuthRepositoryImpl(authApi, authLocal)
+                }
+
+
+                val authedRetrofit = remember {
+                    ApiClient.authedRetrofit(authLocal)
+                }
+                val userApi = remember {
+                    authedRetrofit.create(UserApi::class.java)
+                }
+                val userRepo = remember {
+                    UserRepositoryImpl(userApi)
+                }
+
+                val settingsViewModel = remember {
+                    SettingsViewModel(
+                        userRepo = userRepo,
+                        authRepo = authRepo
+                    )
+                }
+
+                SettingsScreen(
+                    viewModel = settingsViewModel,
+                    onEditProfileClick = {
+                        nav.navigate(EditProfileRoute)
+                    },
+                    onChangePasswordClick = {
+                        nav.navigate(ChangePasswordRoute)
+                    },
+
+                    onLogoutClick = {
+                        onLogout()
+                    }
+                )
+            }
+
+            composable<EditProfileRoute> {
+                val context = LocalContext.current
+                val authLocal = remember { AuthLocalDataSource(context) }
+
+                val authedRetrofit = remember {
+                    ApiClient.authedRetrofit(authLocal)
+                }
+                val userApi = remember {
+                    authedRetrofit.create(UserApi::class.java)
+                }
+                val userRepo = remember {
+                    UserRepositoryImpl(userApi)
+                }
+
+                val vm = remember {
+                    EditProfileViewModel(userRepo)
+                }
+
+                EditProfileScreen(
+                    viewModel = vm,
+                    onBack = { nav.popBackStack() }
+                )
+            }
+
+            composable<ChangePasswordRoute> {
+                val context = LocalContext.current
+                val authLocal = remember { AuthLocalDataSource(context) }
+
+                val authedRetrofit = remember {
+                    ApiClient.authedRetrofit(authLocal)
+                }
+                val authApi = remember {
+                    authedRetrofit.create(AuthApi::class.java)
+                }
+                val authRepo = remember {
+                    AuthRepositoryImpl(authApi, authLocal)
+                }
+
+                val vm = remember {
+                    ChangePasswordViewModel(authRepo)
+                }
+
+                ChangePasswordScreen(
+                    viewModel = vm,
+                    onBack = { nav.popBackStack() }
+                )
+            }
+
+
+
+
+
+
             composable<InterviewRegister> {
                 InterviewRegisterScreen(
                     onBack = {

@@ -1,3 +1,4 @@
+// data/auth/remote/AuthApi.kt
 package com.example.mocklyapp.data.auth.remote
 
 import retrofit2.http.Body
@@ -26,6 +27,11 @@ data class TokenResponseDto(
     val userId: String
 )
 
+data class ChangePasswordRequest(
+    val currentPassword: String,
+    val newPassword: String
+)
+
 interface AuthApi{
     @POST("auth/login")
     suspend fun login(@Body body: LoginRequest): TokenResponseDto
@@ -38,4 +44,7 @@ interface AuthApi{
 
     @POST("auth/logout")
     suspend fun logout(@Body body: RefreshRequest)
+
+    @POST("auth/change-password")
+    suspend fun changePassword(@Body body: ChangePasswordRequest)
 }
