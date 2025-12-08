@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.mocklyapp"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -28,10 +28,13 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+
     }
+
     kotlinOptions {
         jvmTarget = "17"
     }
@@ -39,6 +42,7 @@ android {
     buildFeatures {
         compose = true
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -47,6 +51,10 @@ android {
 }
 
 dependencies {
+
+    implementation("androidx.compose.material:material-icons-extended")
+
+
     // Compose BOM
     implementation(platform(libs.androidx.compose.bom))
 
@@ -54,13 +62,12 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.play.services.maps)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     // Material3
     implementation(libs.androidx.compose.material3)
 
-    // Activity + Navigation (2.8.x содержит type-safe API с Kotlin Serialization)
+    // Activity + Navigation
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.navigation.compose)
 
@@ -72,9 +79,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
     // Tests
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
@@ -83,14 +88,15 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
 
-// OkHttp
+    // OkHttp
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
 
-// Coroutines
+    // Coroutines
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
-// Gson
+
+    // Gson
     implementation(libs.gson)
 
 }

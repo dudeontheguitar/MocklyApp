@@ -1,16 +1,37 @@
 package com.example.mocklyapp.presentation.screens
 
+import android.annotation.SuppressLint
+import android.os.Build
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,38 +40,27 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.mocklyapp.R
-import com.example.mocklyapp.presentation.theme.Poppins
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
+import com.example.mocklyapp.R
+import com.example.mocklyapp.presentation.interview.InterviewRegisterViewModel
+import com.example.mocklyapp.presentation.theme.Poppins
 
+@SuppressLint("ObsoleteSdkInt")
 @Composable
 fun InterviewRegisterScreen(
+    viewModel: InterviewRegisterViewModel,
     onBack: () -> Unit,
-    onSuccessOK: () -> Unit
-
+    onSuccessOK: () -> Unit,
+    jobTitle: String,
+    company: String,
+    interviewerName: String,
+    interviewerId: String
 ) {
+    val state by viewModel.state.collectAsState()
+
     val options = listOf(
         "Today, 3:00 PM",
         "Today, 5:00 PM",
@@ -58,26 +68,22 @@ fun InterviewRegisterScreen(
         "Tomorrow, 5:00 PM"
     )
 
-    val languaggeDrppdown = listOf(
+    val languageDropdown = listOf(
         "Kazakh",
         "English",
         "Russian",
         "Japanese"
     )
 
-    val levelDrppdown = listOf(
+    val levelDropdown = listOf(
         "Intern",
         "Junior",
         "Middle",
         "Senior"
     )
-    var selectedIndex by remember { mutableIntStateOf(0) }
 
     var comment by remember { mutableStateOf("") }
 
-    var isAgree by remember { mutableStateOf(false) }
-
-    var showSuccessDialog by remember { mutableStateOf(false) }
 
     Surface(color = MaterialTheme.colorScheme.onBackground) {
         Column(
@@ -142,7 +148,7 @@ fun InterviewRegisterScreen(
 
                         Column {
                             Text(
-                                text = "Product Manager",
+                                text = jobTitle,
                                 style = TextStyle(
                                     fontFamily = Poppins,
                                     fontSize = 22.sp,
@@ -152,7 +158,7 @@ fun InterviewRegisterScreen(
                             )
                             Spacer(Modifier.height(4.dp))
                             Text(
-                                text = "Kaspi",
+                                text = company,
                                 style = TextStyle(
                                     fontFamily = Poppins,
                                     fontSize = 18.sp,
@@ -172,7 +178,6 @@ fun InterviewRegisterScreen(
                     )
 
                     Spacer(Modifier.height(16.dp))
-
 
                     Row(
                         verticalAlignment = Alignment.CenterVertically
@@ -195,7 +200,7 @@ fun InterviewRegisterScreen(
                             color = MaterialTheme.colorScheme.primaryContainer
                         )
                         Text(
-                            text = "Batyrkhan Malikov",
+                            text = interviewerName,
                             style = TextStyle(
                                 fontFamily = Poppins,
                                 fontSize = 18.sp,
@@ -255,22 +260,21 @@ fun InterviewRegisterScreen(
 
             Spacer(Modifier.height(12.dp))
 
-
             Row(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 TimeOption(
                     time = options[0],
-                    selected = selectedIndex == 0,
-                    onClick = { selectedIndex = 0 },
+                    selected = state.selectedTimeIndex == 0,
+                    onClick = { viewModel.setSelectedTime(0) },
                     modifier = Modifier.weight(1f)
                 )
                 Spacer(Modifier.width(12.dp))
                 TimeOption(
                     time = options[1],
-                    selected = selectedIndex == 1,
-                    onClick = { selectedIndex = 1 },
+                    selected = state.selectedTimeIndex == 1,
+                    onClick = { viewModel.setSelectedTime(1) },
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -280,22 +284,22 @@ fun InterviewRegisterScreen(
             Row(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
-                )
-            {
+            ) {
                 TimeOption(
                     time = options[2],
-                    selected = selectedIndex == 2,
-                    onClick = { selectedIndex = 2 },
+                    selected = state.selectedTimeIndex == 2,
+                    onClick = { viewModel.setSelectedTime(2) },
                     modifier = Modifier.weight(1f)
                 )
                 Spacer(Modifier.width(12.dp))
                 TimeOption(
                     time = options[3],
-                    selected = selectedIndex == 3,
-                    onClick = { selectedIndex = 3 },
+                    selected = state.selectedTimeIndex == 3,
+                    onClick = { viewModel.setSelectedTime(3) },
                     modifier = Modifier.weight(1f)
                 )
             }
+
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
@@ -311,30 +315,28 @@ fun InterviewRegisterScreen(
 
             Spacer(Modifier.height(12.dp))
 
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 InterviewDropdown(
                     format = "Language",
-                    options = languaggeDrppdown,
+                    options = languageDropdown,
                     modifier = Modifier.weight(1f)
                 )
 
                 InterviewDropdown(
                     format = "Junior",
-                    options = levelDrppdown,
+                    options = levelDropdown,
                     modifier = Modifier.weight(1f)
                 )
             }
 
             Spacer(Modifier.height(12.dp))
 
-            OutlinedTextField (
-
+            OutlinedTextField(
                 value = comment,
-                onValueChange = {comment = it},
+                onValueChange = { comment = it },
                 placeholder = {
                     Text(
                         text = "Note to Interviewer",
@@ -346,7 +348,7 @@ fun InterviewRegisterScreen(
                         color = Color(0x99060527),
                         modifier = Modifier.padding(start = 4.dp)
                     )
-                              },
+                },
                 textStyle = TextStyle(
                     fontFamily = Poppins,
                     fontSize = 16.sp,
@@ -377,8 +379,8 @@ fun InterviewRegisterScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Checkbox(
-                    checked = isAgree,
-                    onCheckedChange = { isAgree = it },
+                    checked = state.isAgree,
+                    onCheckedChange = { viewModel.setAgree(it) },
                     modifier = Modifier.size(30.dp)
                 )
 
@@ -395,16 +397,36 @@ fun InterviewRegisterScreen(
 
             Spacer(Modifier.weight(1f))
 
-            if(isAgree) {
+            // сообщение об ошибке сервера
+            state.error?.let { msg ->
+                Text(
+                    text = msg,
+                    color = Color.Red,
+                    style = TextStyle(
+                        fontFamily = Poppins,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium
+                    ),
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                )
+            }
+
+            if (state.isAgree) {
                 Button(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp).height(65.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .height(65.dp),
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
                     onClick = {
-                        showSuccessDialog = true
-                    }
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            viewModel.register()
+                        }
+                    },
+                    enabled = !state.isLoading
                 ) {
                     Text(
-                        text = "Register",
+                        text = if (state.isLoading) "Please wait..." else "Register",
                         style = TextStyle(
                             fontFamily = Poppins,
                             fontWeight = FontWeight.Bold,
@@ -413,11 +435,15 @@ fun InterviewRegisterScreen(
                         color = Color.White
                     )
                 }
-            }else{
+            } else {
                 Button(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp).height(65.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .height(65.dp),
                     colors = ButtonDefaults.buttonColors(Color(0x990A0932)),
-                    onClick = {}
+                    onClick = { },
+                    enabled = false
                 ) {
                     Text(
                         text = "Register",
@@ -430,16 +456,15 @@ fun InterviewRegisterScreen(
                     )
                 }
             }
-            if (showSuccessDialog){
+
+            if (state.isSuccess) {
                 RegisterSuccessDialog(
-                    onDismiss = { showSuccessDialog = false },
+                    onDismiss = { },
                     onOk = {
-                        showSuccessDialog = false
                         onSuccessOK()
                     }
                 )
             }
-
         }
     }
 }
@@ -450,13 +475,13 @@ private fun TimeOption(
     selected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
-){
+) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .padding(start = 4.dp, end = 4.dp)
             .size(width = 185.dp, height = 55.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(if(selected) MaterialTheme.colorScheme.primaryContainer else Color.White)
+            .background(if (selected) MaterialTheme.colorScheme.primaryContainer else Color.White)
             .clickable(onClick = onClick)
             .border(
                 width = 1.dp,
@@ -464,7 +489,7 @@ private fun TimeOption(
                 shape = RoundedCornerShape(8.dp)
             ),
         contentAlignment = Alignment.Center
-    ){
+    ) {
         Text(
             text = time,
             style = TextStyle(
@@ -518,7 +543,7 @@ private fun InterviewDropdown(
             }
         )
 
-        ExposedDropdownMenu(
+       ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {

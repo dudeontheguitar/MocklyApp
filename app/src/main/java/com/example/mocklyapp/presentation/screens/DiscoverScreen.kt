@@ -83,11 +83,20 @@ private fun Header() {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(R.drawable.zaq),
-                contentDescription = "",
-                modifier = Modifier.size(48.dp)
-            )
+            Box(
+                modifier = Modifier
+                    .size(56.dp)
+                    .clip(CircleShape)
+                    .background(Color(0xFFE8E8E8)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.profile),
+                    contentDescription = "Profile",
+                    modifier = Modifier.size(28.dp),
+                    tint = Color.Gray
+                )
+            }
 
             Spacer(modifier = Modifier.width(12.dp))
 
@@ -244,10 +253,32 @@ fun DiscoverSearchBar(
 @Composable
 private fun OngoingInterview() {
     val cards = listOf(
-        OngoingInterviewItem("Frontend Developer", "Remote", "Waiting"),
-        OngoingInterviewItem("Product Manager", "Remote", "Waiting"),
-        OngoingInterviewItem("QA Engineer", "Remote", "Waiting")
+        OngoingInterviewItem(
+            title = "Frontend Developer",
+            company = "Kaspi",
+            location = "Remote",
+            status = "Start",
+            interviewerName = "Alisher K.",
+            interviewerId = "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        ),
+        OngoingInterviewItem(
+            title = "Product Manager",
+            company = "Tele2",
+            location = "Remote",
+            status = "Start",
+            interviewerName = "Aruzhan S.",
+            interviewerId = "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        ),
+        OngoingInterviewItem(
+            title = "QA Engineer",
+            company = "Arbuz",
+            location = "Remote",
+            status = "Waiting",
+            interviewerName = "Batyrkhan M.",
+            interviewerId = "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        )
     )
+
 
     Column(
         modifier = Modifier

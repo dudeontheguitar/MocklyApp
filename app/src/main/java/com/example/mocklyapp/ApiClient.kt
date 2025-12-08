@@ -1,7 +1,5 @@
-// ApiClient.kt
 package com.example.mocklyapp
 
-import android.content.Context
 import com.example.mocklyapp.data.auth.local.AuthLocalDataSource
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -13,55 +11,55 @@ object ApiClient {
 
     private const val BASE_URL = "http://10.0.2.2:8080/api/"
 
-    val retrofit: Retrofit by lazy {
-        val logging = HttpLoggingInterceptor().apply {
+    private fun baseLoggingInterceptor(): HttpLoggingInterceptor =
+        HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
 
-        val client = OkHttpClient.Builder()
-            .addInterceptor(logging)
-            .build()
+    private fun createClient(authLocal: AuthLocalDataSource?): OkHttpClient {
+        val builder = OkHttpClient.Builder()
+            .addInterceptor(baseLoggingInterceptor())
 
+        if (authLocal != null) {
+            val authInterceptor = Interceptor { chain ->
+                val original = chain.request()
+
+                // не добавляем токен для /auth/*
+                if (original.url.encodedPath.contains("/auth/")) {
+                    return@Interceptor chain.proceed(original)
+                }
+
+                val tokens = authLocal.getTokens()
+                val newRequest = if (tokens != null) {
+                    original.newBuilder()
+                        .addHeader("Authorization", "Bearer ${tokens.accessToken}")
+                        .build()
+                } else {
+                    original
+                }
+
+                chain.proceed(newRequest)
+            }
+            builder.addInterceptor(authInterceptor)
+        }
+
+        return builder.build()
+    }
+
+    // без токена (например для /auth/login, /auth/register)
+    val retrofit: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .client(client)
+            .client(createClient(null))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
+    // с токеном (для всего остального, в том числе artifacts)
     fun authedRetrofit(authLocal: AuthLocalDataSource): Retrofit {
-        val logging = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }
-
-        val authInterceptor = Interceptor { chain ->
-            val original = chain.request()
-
-            // не добавляем токен для /auth/*
-            if (original.url.encodedPath.contains("/auth/")) {
-                return@Interceptor chain.proceed(original)
-            }
-
-            val tokens = authLocal.getTokens()
-            val newRequest = if (tokens != null) {
-                original.newBuilder()
-                    .addHeader("Authorization", "Bearer ${tokens.accessToken}")
-                    .build()
-            } else {
-                original
-            }
-
-            chain.proceed(newRequest)
-        }
-
-        val client = OkHttpClient.Builder()
-            .addInterceptor(authInterceptor)
-            .addInterceptor(logging)
-            .build()
-
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .client(client)
+            .client(createClient(authLocal))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
