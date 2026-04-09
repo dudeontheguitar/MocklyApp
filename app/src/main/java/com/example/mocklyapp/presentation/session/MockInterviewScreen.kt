@@ -33,7 +33,7 @@ import java.io.File
 fun MockInterviewScreen(
     sessionId: String,
     onBack: () -> Unit,
-    onEndInterview: () -> Unit,
+    onEndInterview: (sessionId: String) -> Unit,
     artifactRepository: com.example.mocklyapp.domain.artifact.ArtifactRepository
 )
 {
@@ -184,7 +184,7 @@ fun MockInterviewScreen(
 
                         if (file == null) {
                             // ничего не записали — просто выходим
-                            onEndInterview()
+                            onEndInterview(sessionId)
                         } else {
                             isUploading = true
                             scope.launch {
@@ -194,7 +194,7 @@ fun MockInterviewScreen(
                                         file = file,
                                         durationSec = elapsedSec
                                     )
-                                    onEndInterview()
+                                    onEndInterview(sessionId)
                                 } catch (e: Exception) {
                                     errorText = e.message ?: "Failed to upload interview"
                                 } finally {

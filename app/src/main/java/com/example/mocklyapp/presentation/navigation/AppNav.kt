@@ -1,5 +1,7 @@
 package com.example.mocklyapp.presentation.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -583,7 +585,7 @@ fun BottomNav(
                 )
             }
 
-            /** НОВОЕ: экран мок-интервью */
+
             composable<MockInterviewRoute> { backStackEntry ->
                 val args = backStackEntry.toRoute<MockInterviewRoute>()
 
@@ -594,7 +596,6 @@ fun BottomNav(
                     ApiClient.authedRetrofit(authLocal)
                 }
 
-                // 💡 новый API + repo
                 val artifactApi = remember {
                     authedRetrofit.create(com.example.mocklyapp.data.artifact.remote.ArtifactApi::class.java)
                 }
@@ -602,13 +603,56 @@ fun BottomNav(
                     com.example.mocklyapp.data.artifact.ArtifactRepositoryImpl(artifactApi)
                 }
 
-                MockInterviewScreen(
-                    sessionId = args.sessionId,
-                    onBack = { nav.popBackStack() },
-                    onEndInterview = {
-                        nav.popBackStack()
-                    },
-                    artifactRepository = artifactRepo
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    MockInterviewScreen(
+                        sessionId = args.sessionId,
+                        onBack = { nav.popBackStack() },
+                        onEndInterview = { sessionId ->
+                            // 🔥 ИЗМЕНЕНО: переходим на экран результатов вместо popBackStack
+                            nav.navigate(InterviewResultsRoute(sessionId)) {
+                                popUpTo(MockInterviewRoute(args.sessionId)) { inclusive = true }
+                                launchSingleTop = true
+                            }
+                        },
+                        artifactRepository = artifactRepo
+                    )
+                }
+            }
+
+            /** НОВОЕ: экран результатов интервью */
+            composable<InterviewResultsRoute> { backStackEntry ->
+                val args = backStackEntry.toRoute<InterviewResultsRoute>()
+
+                val context = LocalContext.current
+                val authLocal = remember { AuthLocalDataSource(context) }
+
+                val authedRetrofit = remember {
+                    ApiClient.authedRetrofit(authLocal)
+                }
+
+                val reportApi = remember {
+                    authedRetrofit.create(com.example.mocklyapp.data.report.remote.ReportApi::class.java)
+                }
+                val reportRepo = remember {
+                    com.example.mocklyapp.data.report.ReportRepositoryImpl(reportApi)
+                }
+
+                val vm = remember {
+                    com.example.mocklyapp.presentation.interview.InterviewResultsViewModel(
+                        reportRepository = reportRepo,
+                        sessionId = args.sessionId
+                    )
+                }
+
+                com.example.mocklyapp.presentation.interview.InterviewResultsScreen(
+//                    viewModel = vm,
+                    onBack = {
+                        // Возвращаемся на список интервью
+                        nav.navigate(InterviewRoute) {
+                            popUpTo(InterviewRoute) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    }
                 )
             }
 

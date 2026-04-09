@@ -61,4 +61,8 @@ data class SessionDetailsRoute(
 data class MockInterviewRoute(
     val sessionId: String
 )
+@Serializable
+data class InterviewResultsRoute(
+    val sessionId: String
+)
 

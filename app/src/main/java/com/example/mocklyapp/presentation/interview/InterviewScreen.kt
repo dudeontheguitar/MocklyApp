@@ -307,16 +307,16 @@ private fun AvailableInterview(navController: NavHostController) {
             company = "Kaspi",
             location = "Remote",
             status = "Start",
-            interviewerName = "Alisher K.",
-            interviewerId = "1dfd6a71-7df6-4676-adfb-f91e8f9c692d"
+            interviewerName = "Azamat S.",
+            interviewerId = "1d17719b-90de-4b20-9460-a4eb26b834e1"
         ),
         OngoingInterviewItem(
             title = "Product Manager",
             company = "Tele2",
             location = "Remote",
             status = "Start",
-            interviewerName = "Aruzhan S.",
-            interviewerId = "067b8ee7-1eb1-47c1-a75f-f93c01347465"
+            interviewerName = "Diana O.",
+            interviewerId = "6818fe16-f988-4722-a529-85b4cfb1dfcf"
         ),
         OngoingInterviewItem(
             title = "QA Engineer",

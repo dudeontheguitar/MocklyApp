@@ -45,8 +45,6 @@ object ApiClient {
 
         return builder.build()
     }
-
-    // без токена (например для /auth/login, /auth/register)
     val retrofit: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -54,8 +52,6 @@ object ApiClient {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
-
-    // с токеном (для всего остального, в том числе artifacts)
     fun authedRetrofit(authLocal: AuthLocalDataSource): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)

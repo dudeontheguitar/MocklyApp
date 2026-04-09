@@ -111,7 +111,7 @@ private fun Header() {
                     color = MaterialTheme.colorScheme.primaryContainer
                 )
                 Text(
-                    text = "Dulat",
+                    text = "user",
                     style = TextStyle(
                         fontFamily = Poppins,
                         fontSize = 18.sp,
